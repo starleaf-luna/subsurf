@@ -1,3 +1,6 @@
+
+INCLUDE "src/macros/palettes.asm"
+
 SECTION "Palette Tools", ROM0
 
 SetDefaultPalettes::
@@ -15,9 +18,8 @@ SetDefaultPalettes::
 .cgb:
 	ld hl, DefaultCGBPals
 	ld c, 32
-	push bc
 	call LoadBGPals.cgb ; skip checking console type
-	pop bc
+	ld c, 32
 	ld hl, DefaultCGBPals.obj
 	jr LoadOBJPalsCGB ; skip checking console type
 	
@@ -114,6 +116,17 @@ LoadOBJ1Pals::
 	ldh [hOBP1], a
 	ret
 	
+; -------------------
+; | ROUTINE         |
+; -------------------
+; LoadOBJPalsCGB
+; this routine is meant only
+; for the GBC.
+
+; args:
+; [IN]   HL  palettes to write
+; [IN]   C   how many palette slots to write to
+; [OUT]  DE  destroyed
 LoadOBJPalsCGB::
 	; double the palette slot amount (1 slot = 2 bytes)
 	sla c
@@ -129,83 +142,83 @@ LoadOBJPalsCGB::
 
 ; data
 DefaultCGBPals::
-	; BG0
-	rgb 00, 00, 00
-	rgb 16, 16, 16
-	rgb 22, 22, 22
+	; BG 0
 	rgb 31, 31, 31
-	; BG1
+	rgb 22, 22, 22
+	rgb 16, 16, 16
+	rgb 00, 00, 00
+	; BG 1
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
-	; BG2
+	; BG 2
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
-	; BG3
+	; BG 3
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
-	; BG4
+	; BG 4
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
-	; BG5
+	; BG 5
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
-	; BG6
+	; BG 6
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
-	; BG7
+	; BG 7
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 .obj:
-	; OB0
-	rgb 00, 00, 00
-	rgb 16, 16, 16
-	rgb 22, 22, 22
+	; OBJ 0
 	rgb 31, 31, 31
-	; OB1
+	rgb 22, 22, 22
+	rgb 16, 16, 16
+	rgb 00, 00, 00
+	; OBJ 1
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
-	; OB2
+	; OBJ 2
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
-	; OB3
+	; OBJ 3
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
-	; OB4
+	; OBJ 4
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
-	; OB5
+	; OBJ 5
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
-	; OB6
+	; OBJ 6
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
-	; OB7
+	; OBJ 7
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00

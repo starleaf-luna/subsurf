@@ -1,8 +1,6 @@
 
 INCLUDE "defines.asm"
 
-INCLUDE "src/macros/palettes.asm"
-
 SECTION "Header", ROM0[$100]
 
 	; This is your ROM's entry point

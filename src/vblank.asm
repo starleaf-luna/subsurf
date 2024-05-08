@@ -28,11 +28,11 @@ VBlankHandler:
 	jr .cont
 
 .cgb:
+	ld a, %10000000
 	ldh [rBCPS], a
 	ldh [rOCPS], a
 	ld c, 64
 	ld hl, wBGP
-	ld a, %10000000
 .loop1:
 	ld a, [hli]
 	ldh [rBCPD], a
