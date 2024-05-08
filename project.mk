@@ -11,10 +11,11 @@ PADVALUE := 0xFF
 VERSION := 0
 
 # 4-ASCII letter game ID.
-GAMEID := BOIL
+# intended to be read right next to TITLE
+GAMEID := SGBC
 
 # Game title, up to 11 ASCII chars.
-TITLE := BOILERPLATE
+TITLE := SUBWAYSURFR
 
 # New licensee, 2 ASCII chars.
 # Homebrew games FTW!.
@@ -26,18 +27,19 @@ OLDLIC := 0x33
 # You can get a list of valid values by running `rgbfix -m help`.
 # See https://gbdev.io/pandocs/MBCs for more information, or consult any copy of Pan Docs.
 # If using no MBC, consider enabling `-t` below.
-MBC := 0x00
+MBC := 0x1B
 
 # ROM size is set automatically by RGBFIX.
 
 # Size of the on-board SRAM; MBC type should indicate the presence of RAM.
 # See https://gbdev.io/pandocs/The_Cartridge_Header#0149--ram-size or consult any copy of Pan Docs.
 # Set this to 0 when using MBC2's built-in SRAM.
-SRAMSIZE := 0x00
+# temporary
+SRAMSIZE := 0x02
 
 # ROM name.
-ROMNAME := boilerplate
-ROMEXT  := gb
+ROMNAME := subsurf
+ROMEXT  := gbc
 
 
 # Compilation parameters, uncomment to apply, comment to cancel.
@@ -50,7 +52,7 @@ ROMEXT  := gb
 # ASFLAGS += -E
 
 # Game Boy Color compatible.
-# FIXFLAGS += -c
+FIXFLAGS += -c
 # Game Boy Color required.
 # FIXFLAGS += -C
 

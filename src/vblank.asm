@@ -16,13 +16,37 @@ VBlankHandler:
 	ldh [rSCY], a
 	ldh a, [hSCX]
 	ldh [rSCX], a
+	ldh a, [hConsoleType]
+	and a
+	jr z, .cgb
 	ldh a, [hBGP]
 	ldh [rBGP], a
 	ldh a, [hOBP0]
 	ldh [rOBP0], a
 	ldh a, [hOBP1]
 	ldh [rOBP1], a
+	jr .cont
 
+.cgb:
+	ldh [rBCPS], a
+	ldh [rOCPS], a
+	ld c, 64
+	ld hl, wBGP
+	ld a, %10000000
+.loop1:
+	ld a, [hli]
+	ldh [rBCPD], a
+	dec c
+	jr nz, .loop1
+	
+	ld c, 64
+	ld hl, wOBP
+.loop2:
+	ld a, [hli]
+	ldh [rOCPD], a
+	dec c
+	jr nz, .loop2
+.cont:
 	; OAM DMA can occur late in the handler, because it will still work even
 	; outside of VBlank. Sprites just will not appear on the scanline(s)
 	; during which it's running.
@@ -143,3 +167,9 @@ hPressedKeys:: db
 
 ; If this is 0, pressing SsAB at the same time will not reset the game
 hCanSoftReset:: db
+
+
+SECTION "VBlank WRAM", WRAM0
+
+wBGP:: ds 64 ; PALETTE_SLOTS * 2
+wOBP:: ds 64 ; PALETTE_SLOTS * 2

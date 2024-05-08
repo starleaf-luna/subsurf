@@ -1,6 +1,7 @@
 
 INCLUDE "defines.asm"
 
+INCLUDE "src/macros/palettes.asm"
 
 SECTION "Header", ROM0[$100]
 
@@ -52,8 +53,8 @@ Reset::
 	dec b
 	jr nz, .copyOAMDMA
 
-	WARN "Edit to set palettes here"
-	; CGB palettes maybe, DMG ones always
+	; reset palettes
+	call SetDefaultPalettes
 
 	; You will also need to reset your handlers' variables below
 	; I recommend reading through, understanding, and customizing this file
