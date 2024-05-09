@@ -155,3 +155,110 @@ Memcpy::
 	dec b
 	jr nz, .loop
 	ret
+
+SECTION "Tilemap & Attrmap", ROM0
+
+; --------------
+; | ROUTINE    |
+; --------------
+; LoadTilemap
+; copies tilemap DE of size BxC
+; into HL
+
+; params:
+; [IN]   B   width
+; [IN]   C   height
+; [IN]   DE  data
+; [IN]   HL  dest
+; [OUT]  A   destroyed
+LoadTilemap::
+	push bc
+.loop:
+:	ldh a, [rSTAT]
+	and STATF_BUSY
+	jr nz, :-
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec b
+	jr z, .b
+	jr .loop
+	
+.b:
+	pop bc
+	push bc
+	ld a, SCRN_VX_B
+	sub b
+	ld c, a
+	ld b, 0
+	add hl, bc
+	pop bc
+	dec c
+	ret z
+	push bc
+	jr .loop
+	
+; --------------
+; | ROUTINE    |
+; --------------
+; LoadAttrmap
+; copies attrmap DE of size BxC
+; into HL
+
+; params:
+; [IN]   B   width
+; [IN]   C   height
+; [IN]   DE  data
+; [IN]   HL  dest
+; [OUT]  A   destroyed
+LoadAttrmap::
+	ldh a, [hConsoleType]
+	and a
+	ret nz ; CGB only!
+	ld a, 1
+	ld [rVBK], a
+	push bc
+.loop:
+:	ldh a, [rSTAT]
+	and STATF_BUSY
+	jr nz, :-
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec b
+	jr z, .b
+	jr .loop
+	
+.b:
+	pop bc
+	push bc
+	ld a, SCRN_VX_B
+	sub b
+	ld c, a
+	ld b, 0
+	add hl, bc
+	pop bc
+	dec c
+	jr z, .done
+	push bc
+	jr .loop
+	
+.done:
+	xor a
+	ld [rVBK], a
+	ret
+	
+SECTION "Delay Frames", ROM0
+
+; ---------------
+; | ROUTINE     |
+; ---------------
+; DelayFrames
+; delays for C amount
+; of frames
+
+DelayFrames::
+	halt
+	dec c
+	jr nz, DelayFrames
+	ret

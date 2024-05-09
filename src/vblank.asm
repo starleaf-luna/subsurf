@@ -5,6 +5,9 @@ SECTION "VBlank handler stub", ROM0[$40]
 
 ; VBlank handler
 	push af
+	push bc
+	push de
+	push hl
 	ldh a, [hLCDC]
 	ldh [rLCDC], a
 	jr VBlankHandler
@@ -16,37 +19,6 @@ VBlankHandler:
 	ldh [rSCY], a
 	ldh a, [hSCX]
 	ldh [rSCX], a
-	ldh a, [hConsoleType]
-	and a
-	jr z, .cgb
-	ldh a, [hBGP]
-	ldh [rBGP], a
-	ldh a, [hOBP0]
-	ldh [rOBP0], a
-	ldh a, [hOBP1]
-	ldh [rOBP1], a
-	jr .cont
-
-.cgb:
-	ld a, %10000000
-	ldh [rBCPS], a
-	ldh [rOCPS], a
-	ld c, 64
-	ld hl, wBGP
-.loop1:
-	ld a, [hli]
-	ldh [rBCPD], a
-	dec c
-	jr nz, .loop1
-	
-	ld c, 64
-	ld hl, wOBP
-.loop2:
-	ld a, [hli]
-	ldh [rOCPD], a
-	dec c
-	jr nz, .loop2
-.cont:
 	; OAM DMA can occur late in the handler, because it will still work even
 	; outside of VBlank. Sprites just will not appear on the scanline(s)
 	; during which it's running.
@@ -57,10 +29,11 @@ VBlankHandler:
 	xor a
 	ldh [hOAMHigh], a
 .noOAMTransfer
-
+	
 	; Put all operations that cannot be interrupted above this line
 	; For example, OAM DMA (can't jump to ROM in the middle of it),
 	; VRAM accesses (can't screw up timing), etc
+	
 	ei
 
 	ldh a, [hVBlankFlag]
@@ -121,6 +94,13 @@ ENDR
 
 	pop af ; Pop off return address as well to exit infinite loop
 .lagFrame
+	ldh a, [rLY]
+	cp 144
+	jr c, .lagFrame
+	call UpdateCGBPalettes
+	pop hl
+	pop de
+	pop bc
 	pop af
 	ret
 
@@ -129,6 +109,42 @@ ENDR
 	and a
 	jr z, .dontReset
 	jp Reset
+	
+UpdateCGBPalettes:
+	ldh a, [hConsoleType]
+	and a
+	jr z, .cgb_updatepals
+.dmg_updatepals:
+	ldh a, [hBGP]
+	ldh [rBGP], a
+	ldh a, [hOBP0]
+	ldh [rOBP0], a
+	ldh a, [hOBP1]
+	ldh [rOBP1], a
+	ret
+
+.cgb_updatepals:
+	ld a, %10000000
+	ldh [rBCPS], a
+	ldh [rOCPS], a
+	ld d, 64
+	ld b, d
+	ld c, LOW(rBGPD)
+	ld hl, wBGP
+.loop1:
+	ld a, [hli]
+	ldh [c], a
+	dec d
+	jr nz, .loop1
+
+	; ld hl, wOBP ; will already be in hl after the first loop ends
+	ld c, LOW(rOCPD)
+.loop2:
+	ld a, [hli]
+	ldh [c], a
+	dec b
+	jr nz, .loop2
+	ret
 
 	; This ensures the handler is right before the header, avoiding a gap.
 	; We do this also to ensure that `VBlankHandler` is in range of the `jr VBlankHandler`.

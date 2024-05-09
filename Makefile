@@ -55,6 +55,10 @@ rebuild:
 # "Source" assets can thus be safely stored there without `make clean` removing them!
 VPATH := src
 
+assets/logo.2bpp: assets/logo.png
+	@mkdir -p "${@D}"
+	${RGBGFX} -o $@ -P -u $<
+
 assets/%.2bpp: assets/%.png
 	@mkdir -p "${@D}"
 	${RGBGFX} -o $@ $<

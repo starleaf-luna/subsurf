@@ -3,6 +3,44 @@ INCLUDE "src/macros/palettes.asm"
 
 SECTION "Palette Tools", ROM0
 
+BlackOutPalettes::
+	ldh a, [hConsoleType]
+	and a
+	jr z, .cgb
+	
+	ld a, %00000000
+	ldh [hBGP], a
+	ldh [hOBP0], a
+	ldh [hOBP1], a
+	ret
+	
+.cgb:
+	ld hl, BlackCGBPals
+	ld c, 32
+	call LoadBGPals.cgb
+	ld c, 32
+	ld hl, BlackCGBPals
+	jr LoadOBJPalsCGB
+
+WhiteOutPalettes::
+	ldh a, [hConsoleType]
+	and a
+	jr z, .cgb
+	
+	ld a, %11111111
+	ldh [hBGP], a
+	ldh [hOBP0], a
+	ldh [hOBP1], a
+	ret
+	
+.cgb:
+	ld hl, WhiteCGBPals
+	ld c, 32
+	call LoadBGPals.cgb
+	ld c, 32
+	ld hl, WhiteCGBPals
+	jr LoadOBJPalsCGB
+
 SetDefaultPalettes::
 	ldh a, [hConsoleType]
 	and a
@@ -219,6 +257,90 @@ DefaultCGBPals::
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	; OBJ 7
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	
+WhiteCGBPals::
+	; BG 0
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	; BG 1
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	; BG 2
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	; BG 3
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	; BG 4
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	; BG 5
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	; BG 6
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	; BG 7
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+	rgb 31, 31, 31
+
+BlackCGBPals::
+	; BG 0
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	; BG 1
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	; BG 2
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	; BG 3
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	; BG 4
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	; BG 5
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	; BG 6
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	rgb 00, 00, 00
+	; BG 7
 	rgb 00, 00, 00
 	rgb 00, 00, 00
 	rgb 00, 00, 00
