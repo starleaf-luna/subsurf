@@ -72,8 +72,8 @@ Reset::
 
 	; Load the correct ROM bank for later
 	; Important to do it before enabling interrupts
-	assert BANK(Intro) != 0, "`Intro` is in ROM0, please write 1 to the bank registers instead"
-	ld a, BANK(Intro)
+	assert BANK(Logo) != 0, "`Logo` is in ROM0, please write 1 to the bank registers instead"
+	ld a, BANK(Logo)
 	ldh [hCurROMBank], a
 	ld [rROMB0], a
 
@@ -104,8 +104,8 @@ Reset::
 	ld a, h ; ld a, HIGH(wShadowOAM)
 	ldh [hOAMHigh], a
 
-	; `Intro`'s bank has already been loaded earlier
-	jp Intro
+	; `Logo`'s bank has already been loaded earlier
+	jp Logo
 
 SECTION "OAM DMA routine", ROMX
 

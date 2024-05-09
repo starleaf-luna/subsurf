@@ -1,9 +1,9 @@
 
 INCLUDE "src/macros/code.asm"
 
-SECTION "Intro", ROMX
+SECTION "Logo", ROMX
 
-Intro::
+Logo::
 	call WhiteOutPalettes
 	ld c, 5
 	call DelayFrames
@@ -41,9 +41,9 @@ Intro::
 	ld c, 90
 	call DelayFrames
 	call FadeOutToBlack
-.loop:
-	halt
-	jr .loop
+	ld c, 40
+	call DelayFrames
+	jp LogoJumpToEngine
 
 LogoGFX: INCBIN "assets/logo.2bpp"
 LogoDMGGFX: INCBIN "assets/logo-dmg.2bpp"
@@ -54,3 +54,11 @@ LogoTilemap: INCBIN "assets/logo.tilemap"
 LogoAttrmap: INCBIN "assets/logo.attrmap"
 LogoTilemap_DMG: INCBIN "assets/logo-dmg.tilemap"
 LogoGFX_End:
+
+SECTION "Bankswitch Handlers - logo.asm", ROM0
+
+LogoJumpToEngine::
+	ld a, BANK(LevelEngine)
+	ldh [hCurROMBank], a
+	ld [rROMB0], a
+	jp LevelEngine
